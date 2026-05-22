@@ -1,12 +1,14 @@
-# 🌿 NatureMama Heritage — AI Shopping Assistant
+# 🌿 NatureMama Heritage : AI Shopping Assistant
 
-> A production-grade AI-powered e-commerce chatbot built with **Amazon Nova Pro**, **AWS Amplify Gen 2**, and **AppSync JS Resolvers** — demonstrating RAG-style context injection, structured tool-use, and serverless AI agent architecture.
+> A production-grade AI-powered e-commerce chatbot built with **Amazon Nova Pro**, **AWS Amplify Gen 2**, and **AppSync JS Resolvers** : demonstrating RAG-style context injection, structured tool-use, and serverless AI agent architecture.
 
 <p align="center">
-
-https://github.com/keerthan-m-shetty/naturemama-ai-shopping-assistant/raw/main/docs/demo.mp4
-
+  <a href="docs/demo.mp4">
+    <img src="https://img.shields.io/badge/▶_Watch_Demo-Click_to_Download-sage?style=for-the-badge&logo=github" alt="Watch Demo" />
+  </a>
 </p>
+
+> **📹 Demo:** Click the badge above to download and watch the 82-second demo showing RAG retrieval, AI-powered cart management, and real-time action execution.
 
 ![Architecture](https://img.shields.io/badge/Architecture-Serverless_AI_Agent-sage)
 ![LLM](https://img.shields.io/badge/LLM-Amazon_Nova_Pro-orange)
@@ -22,7 +24,7 @@ https://github.com/keerthan-m-shetty/naturemama-ai-shopping-assistant/raw/main/d
 | **AI Agent Architecture** | LLM returns structured JSON actions that the frontend executes (add to cart, navigate, clear cart) |
 | **RAG / Context Injection** | Live product catalog retrieved from DynamoDB and injected into the LLM system prompt at query time |
 | **Prompt Engineering** | Structured output enforcement (JSON-only responses), temperature tuning, multi-turn conversation |
-| **Serverless AI Backend** | Direct AppSync → Bedrock integration via JS resolvers — zero Lambda cold starts |
+| **Serverless AI Backend** | Direct AppSync → Bedrock integration via JS resolvers : zero Lambda cold starts |
 | **Full-Stack Integration** | React frontend wired to AI backend with real-time cart management and navigation |
 | **Observability** | Model invocation logging enabled via CloudWatch for debugging and cost monitoring |
 
@@ -166,11 +168,11 @@ sequenceDiagram
 | **AppSync JS Resolver** | ~5-10ms overhead | None | Included in AppSync request cost |
 
 We chose **AppSync JS Resolvers** because:
-- **Zero cold starts** — the resolver executes within AppSync's runtime, not a separate compute environment
-- **Direct HTTP to Bedrock** — no intermediate Lambda hop; AppSync signs the request with IAM and calls Bedrock directly
-- **Lower latency** — eliminates ~200ms of Lambda overhead per request
-- **Simpler deployment** — no separate function packaging, dependency management, or runtime configuration
-- **Cost efficient** — no Lambda invocation charges; the AppSync request cost covers everything
+- **Zero cold starts** : the resolver executes within AppSync's runtime, not a separate compute environment
+- **Direct HTTP to Bedrock** : no intermediate Lambda hop; AppSync signs the request with IAM and calls Bedrock directly
+- **Lower latency** : eliminates ~200ms of Lambda overhead per request
+- **Simpler deployment** : no separate function packaging, dependency management, or runtime configuration
+- **Cost efficient** : no Lambda invocation charges; the AppSync request cost covers everything
 
 **Trade-off acknowledged:** AppSync JS has a restrictive runtime (no npm packages, limited APIs). For our use case (format a prompt → call an HTTP endpoint → parse response), it's more than sufficient.
 
@@ -197,10 +199,10 @@ Instead of parsing free-text responses for action keywords, we enforce **structu
 ```
 
 **Why this approach:**
-- **Reliability** — JSON parsing is deterministic; regex extraction of actions from free text is fragile
-- **Temperature 0.3** — low temperature keeps the model disciplined about output format
-- **Separation of concerns** — the LLM decides *what* to do; the frontend decides *how* to do it
-- **Extensible** — adding new action types (e.g., `APPLY_COUPON`, `SHOW_COMPARISON`) requires only schema documentation in the prompt, no code changes to the resolver
+- **Reliability**: JSON parsing is deterministic; regex extraction of actions from free text is fragile
+- **Temperature 0.3**: low temperature keeps the model disciplined about output format
+- **Separation of concerns**: the LLM decides *what* to do; the frontend decides *how* to do it
+- **Extensible** : adding new action types (e.g., `APPLY_COUPON`, `SHOW_COMPARISON`) requires only schema documentation in the prompt, no code changes to the resolver
 
 **Supported actions:**
 
@@ -208,7 +210,7 @@ Instead of parsing free-text responses for action keywords, we enforce **structu
 |--------|--------|--------|
 | `ADD_TO_CART` | productId, productName, price, slug, quantity | Adds item(s) to cart via CartContext |
 | `REMOVE_FROM_CART` | productId | Removes item from cart |
-| `CLEAR_CART` | — | Empties the entire cart |
+| `CLEAR_CART` | : | Empties the entire cart |
 | `NAVIGATE` | path (`/cart` or `/products`) | Routes user to a page |
 
 ---
@@ -276,7 +278,7 @@ npx ampx sandbox
 npm run dev
 ```
 
-Visit `http://localhost:3000` — click the chat bubble in the bottom-right corner.
+Visit `http://localhost:3000` : click the chat bubble in the bottom-right corner.
 
 ### Seed the Database
 
@@ -317,20 +319,20 @@ The project includes a seed component. Temporarily add `<SeedDatabase />` to the
 
 | File | What it demonstrates |
 |------|---------------------|
-| `amplify/data/chatHandler.js` | AppSync JS resolver — prompt construction, Bedrock HTTP call, response parsing |
-| `amplify/backend.ts` | CDK infrastructure — HTTP data source with IAM signing for Bedrock |
-| `src/components/chat/ShoppingAssistant.tsx` | Full AI agent frontend — RAG retrieval, conversation management, action execution, defensive parsing |
+| `amplify/data/chatHandler.js` | AppSync JS resolver : prompt construction, Bedrock HTTP call, response parsing |
+| `amplify/backend.ts` | CDK infrastructure : HTTP data source with IAM signing for Bedrock |
+| `src/components/chat/ShoppingAssistant.tsx` | Full AI agent frontend : RAG retrieval, conversation management, action execution, defensive parsing |
 | `amplify/data/resource.ts` | GraphQL schema with custom query definition and authorization |
 
 ---
 
 ## 📈 Future Enhancements
 
-- [ ] **Vector DB RAG** — Migrate to Bedrock Knowledge Bases when catalog exceeds 200 products
-- [ ] **Conversation persistence** — Store chat history in DynamoDB for cross-session context
-- [ ] **Streaming responses** — Use AppSync subscriptions for token-by-token streaming
-- [ ] **Multi-modal** — Accept product images in chat for visual search
-- [ ] **A/B testing** — Compare Nova Pro vs Claude for response quality metrics
+- [ ] **Vector DB RAG** : Migrate to Bedrock Knowledge Bases when catalog exceeds 200 products
+- [ ] **Conversation persistence** : Store chat history in DynamoDB for cross-session context
+- [ ] **Streaming responses** : Use AppSync subscriptions for token-by-token streaming
+- [ ] **Multi-modal** : Accept product images in chat for visual search
+- [ ] **A/B testing** : Compare Nova Pro vs Claude for response quality metrics
 
 ---
 
