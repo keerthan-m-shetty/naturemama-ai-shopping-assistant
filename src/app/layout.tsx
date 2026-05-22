@@ -6,6 +6,7 @@ import { CartProvider } from "@/context/CartContext";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ShoppingAssistant from "@/components/chat/ShoppingAssistant";
+import CartDrawer from "@/components/cart/CartDrawer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -58,6 +59,8 @@ export default function RootLayout({
             <Footer />
             {/* Floating AI shopping assistant — rendered on every page */}
             <ShoppingAssistant />
+            {/* Slide-out cart drawer */}
+            <CartDrawer />
           </CartProvider>
         </AmplifyProvider>
       </body>

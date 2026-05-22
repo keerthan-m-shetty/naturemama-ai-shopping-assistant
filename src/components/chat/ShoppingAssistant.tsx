@@ -139,6 +139,7 @@ export default function ShoppingAssistant() {
   // RAG: Live product catalog from DynamoDB
   const [catalogContext, setCatalogContext] = useState<string>("Loading products...");
   const [productCount,   setProductCount]  = useState(0);
+  const [productsFromDB, setProductsFromDB] = useState<ProductFromDB[]>([]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef       = useRef<HTMLInputElement>(null);
@@ -149,9 +150,11 @@ export default function ShoppingAssistant() {
       try {
         const { data: products } = await client.models.Product.list();
         if (products && products.length > 0) {
-          const catalog = buildCatalogFromDB(products as unknown as ProductFromDB[]);
+          const typedProducts = products as unknown as ProductFromDB[];
+          const catalog = buildCatalogFromDB(typedProducts);
           setCatalogContext(catalog);
           setProductCount(products.length);
+          setProductsFromDB(typedProducts);
           console.log("[RAG] Retrieved " + products.length + " products from DynamoDB");
         } else {
           setCatalogContext("No products in database.");
@@ -184,14 +187,20 @@ export default function ShoppingAssistant() {
         const action = actions[i];
 
         if (action.type === "ADD_TO_CART") {
-          if (!action.productId || !action.productName || action.price === undefined) continue;
+          if (!action.productId) continue;
+          // Look up missing fields from the loaded products (resilient to incomplete LLM output)
+          const dbProduct = productsFromDB.find((p) => p.id === action.productId);
+          const productName = action.productName || (dbProduct ? dbProduct.name : "Unknown Product");
+          const price = action.price ?? (dbProduct ? dbProduct.basePrice : 0);
+          const slug = action.slug || (dbProduct ? dbProduct.slug : action.productId);
           const qty = typeof action.quantity === "number" && action.quantity > 0
             ? action.quantity : 1;
+
           const item: CartLineItem = {
             productId: action.productId,
-            name:      action.productName,
-            price:     action.price,
-            slug:      action.slug ?? action.productId,
+            name:      productName,
+            price:     price,
+            slug:      slug,
             quantity:  qty,
           };
           addItem(item);
@@ -206,15 +215,14 @@ export default function ShoppingAssistant() {
         }
 
         if (action.type === "NAVIGATE" && action.path) {
-          if (action.path === "/cart") {
+          if (action.path === "/cart" || action.path.includes("cart")) {
             openCart();
-          } else {
-            router.push(action.path);
           }
+          // Ignore /products navigation — the chatbot should list products in the message instead
         }
       }
     },
-    [addItem, removeItem, clearCart, openCart, router]
+    [addItem, removeItem, clearCart, openCart, router, productsFromDB]
   );
 
   // ── Send message ─────────────────────────────────────────────────────────
@@ -241,7 +249,10 @@ export default function ShoppingAssistant() {
       });
 
       const rawResponse = result.data ?? "";
+      console.log("[RAG Debug] Raw response:", rawResponse);
       const { message, actions } = parseModelResponse(rawResponse);
+      console.log("[RAG Debug] Parsed message:", message);
+      console.log("[RAG Debug] Parsed actions:", actions);
 
       setMessages((prev) => [
         ...prev,
@@ -371,7 +382,20 @@ export default function ShoppingAssistant() {
                     : "bg-white text-earth-800 border border-natural-200 rounded-bl-sm shadow-sm",
                 ].join(" ")}
               >
-                {msg.content}
+                {msg.role === "assistant" ? (
+                  <div
+                    className="whitespace-pre-wrap [&>p]:mb-1.5 [&>ul]:list-disc [&>ul]:pl-4 [&>ul]:space-y-1"
+                    dangerouslySetInnerHTML={{
+                      __html: msg.content
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                        .replace(/^- (.+)$/gm, '<li>$1</li>')
+                        .replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>')
+                        .replace(/\n/g, '<br/>')
+                    }}
+                  />
+                ) : (
+                  msg.content
+                )}
               </div>
             </div>
           ))}

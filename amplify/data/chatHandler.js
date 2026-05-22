@@ -16,8 +16,12 @@ export function request(ctx) {
     "2. You MUST reply ONLY with a valid JSON object. No markdown, no code fences, no extra text.\n" +
     "3. The JSON must have exactly two keys: message (string) and actions (array).\n" +
     "4. Valid action types: ADD_TO_CART, REMOVE_FROM_CART, CLEAR_CART, NAVIGATE.\n" +
-    "5. Always respond in English by default. Only switch language if the customer explicitly writes in another language.\n" +
-    "6. Be warm, expert, and concise. Never invent products not in the catalog.";
+    "5. For ADD_TO_CART you MUST include ALL fields: type, productId, productName, price, slug, quantity.\n" +
+    "6. ONLY use ADD_TO_CART when the user EXPLICITLY asks to add something to their cart. Never add items just because you recommended them.\n" +
+    "7. For NAVIGATE use path /cart when user wants to see their cart. Do NOT use NAVIGATE /products — instead list the products directly in your message.\n" +
+    "8. When asked to list or show products, include product names, prices, and descriptions in your message text.\n" +
+    "9. Always respond in English by default. Only switch language if the customer explicitly writes in another language.\n" +
+    "10. Be warm, expert, and concise. Never invent products not in the catalog.";
 
   var userText = "Conversation:\n" + conversation;
 
