@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Google Fonts are loaded via next/font in layout.tsx ── */
+
+@layer base {
+  :root {
+    --font-inter:    "Inter", sans-serif;
+    --font-playfair: "Playfair Display", serif;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-natural-100 text-earth-900 font-sans antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-serif;
+  }
+
+  /* Custom scrollbar – subtle sage tint */
+  ::-webkit-scrollbar        { width: 6px; }
+  ::-webkit-scrollbar-track  { @apply bg-natural-200; }
+  ::-webkit-scrollbar-thumb  { @apply bg-sage-300 rounded-full; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-sage-500; }
+}
+
+@layer components {
+  /* ── Reusable button variants ── */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2
+           bg-sage-500 text-white font-sans font-medium
+           px-8 py-3.5 rounded-full
+           transition-all duration-300 ease-smooth
+           hover:bg-sage-600 hover:shadow-lg hover:-translate-y-0.5
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage-400 focus-visible:ring-offset-2
+           active:translate-y-0;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2
+           border border-white/70 text-white font-sans font-medium
+           px-8 py-3.5 rounded-full backdrop-blur-sm
+           transition-all duration-300 ease-smooth
+           hover:bg-white/10 hover:border-white
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2
+           border border-sage-500 text-sage-600 font-sans font-medium
+           px-8 py-3.5 rounded-full
+           transition-all duration-300 ease-smooth
+           hover:bg-sage-500 hover:text-white
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage-400 focus-visible:ring-offset-2;
+  }
+
+  /* ── Section wrapper ── */
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* ── Section heading ── */
+  .section-eyebrow {
+    @apply text-sage-500 text-sm font-sans font-semibold tracking-[0.2em] uppercase;
+  }
+
+  .section-title {
+    @apply font-serif text-4xl md:text-5xl text-earth-900 leading-tight;
+  }
+
+  /* ── Card ── */
+  .card {
+    @apply bg-white rounded-2xl shadow-sm border border-natural-200
+           transition-all duration-300 hover:shadow-md hover:-translate-y-1;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Delay utilities for staggered animations */
+  .animation-delay-200  { animation-delay: 200ms; }
+  .animation-delay-400  { animation-delay: 400ms; }
+  .animation-delay-600  { animation-delay: 600ms; }
+  .animation-delay-800  { animation-delay: 800ms; }
+  .animation-delay-1000 { animation-delay: 1000ms; }
+
+  /* Fill-mode for one-shot animations */
+  .animate-fill-both { animation-fill-mode: both; }
+}
