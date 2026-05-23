@@ -3,12 +3,8 @@
 > A production-grade AI-powered e-commerce chatbot built with **Amazon Nova Pro**, **AWS Amplify Gen 2**, and **AppSync JS Resolvers** : demonstrating RAG-style context injection, structured tool-use, and serverless AI agent architecture.
 
 <p align="center">
-  <a href="docs/demo.mp4">
-    <img src="https://img.shields.io/badge/▶_Watch_Demo-Click_to_Download-sage?style=for-the-badge&logo=github" alt="Watch Demo" />
-  </a>
+  <img src="docs/demo.gif" alt="AI Shopping Assistant Demo" width="700" />
 </p>
-
-> **📹 Demo:** Click the badge above to download and watch the 82-second demo showing RAG retrieval, AI-powered cart management, and real-time action execution.
 
 ![Architecture](https://img.shields.io/badge/Architecture-Serverless_AI_Agent-sage)
 ![LLM](https://img.shields.io/badge/LLM-Amazon_Nova_Pro-orange)
